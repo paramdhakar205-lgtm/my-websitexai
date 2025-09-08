@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How AI is Transforming Education — Animated Blog</title>
+  <meta name="description" content="A modern, animated blogging website about how AI is transforming education. Built with HTML, Tailwind CSS, JavaScript, and Three.js." />
+
+  <!-- Tailwind CSS CDN (Play CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ["Inter", "ui-sans-serif", "system-ui", "-apple-system"],
+          },
+          boxShadow: {
+            glow: "0 0 80px rgba(99, 102, 241, 0.25)",
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- THREE.js -->
+  <script src="https://unpkg.com/three@0.160.1/build/three.min.js"></script>
+
+  <style>
+    /* Subtle fade/slide animation helpers */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+    /* Floating badges */
+    @keyframes floaty { 0% { transform: translateY(0) } 50% { transform: translateY(-8px) } 100% { transform: translateY(0) } }
+
+    /* Gradient text utility */
+    .text-gradient {
+      background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 50%, #10b981 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+    }
+
+    /* Glass card */
+    .glass { background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06)); backdrop-filter: blur(10px); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-display selection:bg-indigo-500/30">
+  <!-- 3D Background Canvas -->
+  <canvas id="bg" class="fixed inset-0 -z-10"></canvas>
+
+  <!-- Gradient overlay for readability -->
+  <div class="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-slate-950/40 via-slate-950/10 to-slate-950"></div>
+
+  <!-- NAVBAR -->
+  <header class="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-slate-950/40 border-b border-white/5">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <a href="#home" class="flex items-center gap-3 group">
+        <div class="h-9 w-9 rounded-2xl bg-gradient-to-tr from-indigo-500 via-cyan-400 to-emerald-400 shadow-glow"></div>
+        <span class="font-extrabold tracking-tight text-lg">AI × Education</span>
+      </a>
+      <ul class="hidden md:flex items-center gap-6 text-slate-300">
+        <li><a href="#posts" class="hover:text-white">Posts</a></li>
+        <li><a href="#features" class="hover:text-white">Features</a></li>
+        <li><a href="#timeline" class="hover:text-white">Timeline</a></li>
+        <li><a href="#subscribe" class="hover:text-white">Subscribe</a></li>
+      </ul>
+      <a href="#posts" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition-colors text-sm font-semibold shadow-md">Read Blog</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section id="home" class="relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 md:pt-28 md:pb-24">
+      <div class="grid md:grid-cols-12 gap-10 items-center">
+        <div class="md:col-span-7">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border border-white/10 text-xs text-slate-200 animate-[floaty_5s_ease-in-out_infinite]">
+            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+            Real stories & research-backed insights
+          </div>
+          <h1 class="mt-6 text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
+            How <span class="text-gradient">AI is Transforming Education</span>
+          </h1>
+          <p class="mt-6 text-lg text-slate-300 max-w-2xl">
+            From adaptive learning to AI tutors and smart campuses, explore how artificial intelligence is reshaping how we learn, teach, and assess—today and in the next decade.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#posts" class="px-5 py-3 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-100 transition-colors">Explore Posts</a>
+            <a href="#features" class="px-5 py-3 rounded-xl bg-slate-900/60 ring-1 ring-white/10 hover:bg-slate-900/80 transition-colors">See Features</a>
+          </div>
+        </div>
+        <div class="md:col-span-5">
+          <div class="relative">
+            <div class="absolute -inset-6 rounded-3xl bg-gradient-to-tr from-indigo-500/30 via-cyan-400/30 to-emerald-400/30 blur-2xl"></div>
+            <div class="relative glass border border-white/10 rounded-3xl p-6 shadow-xl">
+              <h3 class="text-xl font-bold">What you'll find</h3>
+              <ul class="mt-4 space-y-3 text-slate-300">
+                <li class="flex items-start gap-3"><span class="mt-1 h-2 w-2 rounded-full bg-indigo-400"></span> Actionable classroom use‑cases</li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-2 w-2 rounded-full bg-cyan-400"></span> Ethics, privacy & academic integrity</li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span> Tools, prompts & project ideas</li>
+              </ul>
+              <div class="mt-6 text-sm text-slate-400">Made with HTML · Tailwind · JavaScript · Three.js</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POSTS -->
+  <section id="posts" class="relative py-16 md:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between mb-10">
+        <h2 class="text-3xl md:text-4xl font-extrabold">Latest Posts</h2>
+        <div class="text-sm text-slate-400">Updated monthly</div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <article class="reveal group rounded-3xl glass border border-white/10 p-5 hover:shadow-glow transition-shadow">
+          <img src="https://images.unsplash.com/photo-1512295767273-ac109ac3acfa?q=80&w=1600&auto=format&fit=crop" alt="AI tutor" class="rounded-2xl mb-4 aspect-video object-cover"/>
+          <h3 class="text-xl font-bold group-hover:underline">AI Tutors: Your 24/7 Study Buddy</h3>
+          <p class="mt-2 text-slate-300">Adaptive tutoring systems personalize feedback, pace, and practice—unlocking mastery for every learner.</p>
+          <div class="mt-4 flex items-center justify-between text-sm text-slate-400">
+            <span>8 min read</span><a href="#" class="hover:text-white">Read more →</a>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="reveal group rounded-3xl glass border border-white/10 p-5 hover:shadow-glow transition-shadow">
+          <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=1600&auto=format&fit=crop" alt="Analytics dashboard" class="rounded-2xl mb-4 aspect-video object-cover"/>
+          <h3 class="text-xl font-bold group-hover:underline">Learning Analytics: From Data to Action</h3>
+          <p class="mt-2 text-slate-300">Predictive models flag at‑risk students and surface timely interventions for instructors.</p>
+          <div class="mt-4 flex items-center justify-between text-sm text-slate-400">
+            <span>6 min read</span><a href="#" class="hover:text-white">Read more →</a>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="reveal group rounded-3xl glass border border-white/10 p-5 hover:shadow-glow transition-shadow">
+          <img src="https://images.unsplash.com/photo-1529101091764-c3526daf38fe?q=80&w=1600&auto=format&fit=crop" alt="Classroom" class="rounded-2xl mb-4 aspect-video object-cover"/>
+          <h3 class="text-xl font-bold group-hover:underline">Assessment, Reimagined</h3>
+          <p class="mt-2 text-slate-300">Automated feedback, oral exams with AI evaluators, and project‑based rubrics that reward creativity.</p>
+          <div class="mt-4 flex items-center justify-between text-sm text-slate-400">
+            <span>9 min read</span><a href="#" class="hover:text-white">Read more →</a>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="reveal group rounded-3xl glass border border-white/10 p-5 hover:shadow-glow transition-shadow">
+          <img src="https://images.unsplash.com/photo-1553877522-84f95e060dee?q=80&w=1600&auto=format&fit=crop" alt="Robotics lab" class="rounded-2xl mb-4 aspect-video object-cover"/>
+          <h3 class="text-xl font-bold group-hover:underline">Ethics & Academic Integrity</h3>
+          <p class="mt-2 text-slate-300">Plagiarism detection, transparent AI use, and building a culture of integrity with new tools.</p>
+          <div class="mt-4 flex items-center justify-between text-sm text-slate-400">
+            <span>7 min read</span><a href="#" class="hover:text-white">Read more →</a>
+          </div>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="reveal group rounded-3xl glass border border-white/10 p-5 hover:shadow-glow transition-shadow">
+          <img src="https://images.unsplash.com/photo-1580894894513-54183df7961c?q=80&w=1600&auto=format&fit=crop" alt="STEM classroom" class="rounded-2xl mb-4 aspect-video object-cover"/>
+          <h3 class="text-xl font-bold group-hover:underline">Project Ideas for Classrooms</h3>
+          <p class="mt-2 text-slate-300">Build chatbots, analyze datasets, or create AI art with clear rubrics and learning outcomes.</p>
+          <div class="mt-4 flex items-center justify-between text-sm text-slate-400">
+            <span>5 min read</span><a href="#" class="hover:text-white">Read more →</a>
+          </div>
+        </article>
+
+        <!-- Card 6 -->
+        <article class="reveal group rounded-3xl glass border border-white/10 p-5 hover:shadow-glow transition-shadow">
+          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1600&auto=format&fit=crop" alt="coding" class="rounded-2xl mb-4 aspect-video object-cover"/>
+          <h3 class="text-xl font-bold group-hover:underline">Teachers + AI: A Powerful Duo</h3>
+          <p class="mt-2 text-slate-300">Lesson planning, differentiation, and workload reduction—without losing the human touch.</p>
+          <div class="mt-4 flex items-center justify-between text-sm text-slate-400">
+            <span>8 min read</span><a href="#" class="hover:text-white">Read more →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="py-16 md:py-24 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-extrabold mb-10">What makes this blog different?</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="reveal glass border border-white/10 rounded-3xl p-6">
+          <div class="text-5xl">📊</div>
+          <h3 class="mt-4 text-xl font-bold">Evidence‑first</h3>
+          <p class="mt-2 text-slate-300">We synthesize research and case studies into practical classroom strategies.</p>
+        </div>
+        <div class="reveal glass border border-white/10 rounded-3xl p-6">
+          <div class="text-5xl">🧑‍🏫</div>
+          <h3 class="mt-4 text-xl font-bold">Teacher‑centric</h3>
+          <p class="mt-2 text-slate-300">Tools and templates that reduce workload and amplify teacher impact.</p>
+        </div>
+        <div class="reveal glass border border-white/10 rounded-3xl p-6">
+          <div class="text-5xl">🔒</div>
+          <h3 class="mt-4 text-xl font-bold">Privacy‑aware</h3>
+          <p class="mt-2 text-slate-300">We highlight ethical considerations, data protection, and student safety.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE / ROADMAP -->
+  <section id="timeline" class="py-16 md:py-24 border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-extrabold mb-10">AI in Education — The Journey</h2>
+      <ol class="relative border-s border-white/10 ml-3 space-y-10">
+        <li class="reveal ml-6">
+          <div class="absolute -left-3 mt-1 h-6 w-6 rounded-full bg-indigo-500"></div>
+          <h3 class="text-xl font-bold">2015–2018 · Early pilots</h3>
+          <p class="text-slate-300">Adaptive learning platforms and auto‑grading tools begin small‑scale adoption.</p>
+        </li>
+        <li class="reveal ml-6">
+          <div class="absolute -left-3 mt-1 h-6 w-6 rounded-full bg-cyan-400"></div>
+          <h3 class="text-xl font-bold">2019–2022 · Scale & analytics</h3>
+          <p class="text-slate-300">Learning analytics dashboards inform interventions and program design.</p>
+        </li>
+        <li class="reveal ml-6">
+          <div class="absolute -left-3 mt-1 h-6 w-6 rounded-full bg-emerald-400"></div>
+          <h3 class="text-xl font-bold">2023–Now · Generative AI</h3>
+          <p class="text-slate-300">AI copilots, content creation, and multimodal tools are changing pedagogy at pace.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- SUBSCRIBE -->
+  <section id="subscribe" class="py-16 md:py-24 border-t border-white/5">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl md:text-4xl font-extrabold">Get new posts in your inbox</h2>
+      <p class="mt-3 text-slate-300">No spam. Just the best ideas, case studies, and classroom templates.</p>
+      <form class="mt-6 flex items-center gap-2 max-w-xl mx-auto">
+        <input type="email" required placeholder="you@example.com" class="flex-1 rounded-2xl bg-white/95 text-slate-900 px-4 py-3 outline-none"/>
+        <button class="px-5 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-500 transition-colors font-semibold">Subscribe</button>
+      </form>
+      <div id="subscribeMsg" class="mt-3 text-sm text-emerald-400 hidden">Thanks! Please check your inbox to confirm.</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 border-t border-white/5 text-center text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p>© <span id="year"></span> AI × Education Blog. Built with ❤️ using HTML · Tailwind · JavaScript · Three.js</p>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    // --- Three.js Scene ---
+    const canvas = document.getElementById('bg');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
+    camera.position.set(0, 0, 18);
+
+    // Lights
+    const light1 = new THREE.DirectionalLight(0xffffff, 1.2); light1.position.set(5, 10, 8);
+    const light2 = new THREE.PointLight(0x77ccff, 0.8); light2.position.set(-8, -4, -6);
+    const ambient = new THREE.AmbientLight(0x556677, 0.6);
+    scene.add(light1, light2, ambient);
+
+    // Geometry: Icosahedron core
+    const coreGeom = new THREE.IcosahedronGeometry(5, 1);
+    const coreMat = new THREE.MeshStandardMaterial({
+      color: 0x6ee7b7,
+      metalness: 0.3,
+      roughness: 0.25,
+      transparent: true,
+      opacity: 0.7,
+      wireframe: true
+    });
+    const core = new THREE.Mesh(coreGeom, coreMat);
+    scene.add(core);
+
+    // Floating particles
+    const particles = new THREE.Group();
+    const pGeom = new THREE.SphereGeometry(0.06, 8, 8);
+    const pMat = new THREE.MeshBasicMaterial({ color: 0x93c5fd });
+    for (let i = 0; i < 500; i++) {
+      const p = new THREE.Mesh(pGeom, pMat);
+      p.position.set((Math.random()-0.5)*80, (Math.random()-0.5)*50, (Math.random()-0.5)*60);
+      particles.add(p);
+    }
+    scene.add(particles);
+
+    // Resize handler
+    function onResize(){
+      const w = window.innerWidth, h = window.innerHeight;
+      renderer.setSize(w, h);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', onResize); onResize();
+
+    // Mouse parallax
+    let targetX = 0, targetY = 0;
+    window.addEventListener('mousemove', (e)=>{
+      const x = (e.clientX / window.innerWidth) * 2 - 1;
+      const y = (e.clientY / window.innerHeight) * 2 - 1;
+      targetX = x * 0.8; targetY = -y * 0.6;
+    });
+
+    // Scroll parallax
+    window.addEventListener('scroll', ()=>{
+      const s = window.scrollY / window.innerHeight;
+      camera.position.z = 18 + s * 2.5;
+      camera.position.y = s * -1.2;
+    });
+
+    // Animation loop
+    const clock = new THREE.Clock();
+    function animate(){
+      const t = clock.getElapsedTime();
+      core.rotation.x += 0.002; core.rotation.y += 0.003;
+      core.position.x += (targetX - core.position.x) * 0.02;
+      core.position.y += (targetY - core.position.y) * 0.02;
+
+      particles.rotation.y += 0.0008;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // --- UI Behaviors ---
+    // Reveal on scroll
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach((entry)=>{
+        if(entry.isIntersecting){ entry.target.classList.add('show'); }
+      })
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+    // Subscribe mock
+    const form = document.querySelector('#subscribe form');
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      document.getElementById('subscribeMsg').classList.remove('hidden');
+      form.reset();
+    });
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
